@@ -66,6 +66,13 @@
     .result-figure { width:100%; margin:18px auto 0; }
     .result-panel-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; gap:12px; }
     .result-panel { display:block; width:100%; height:320px; object-fit:contain; border:1px solid var(--line); border-radius:7px; background:#fff; }
+    .example-panel-grid { display:grid; grid-template-columns:1250fr 1051fr; gap:12px; align-items:start; }
+    .example-crop { position:relative; overflow:hidden; border:1px solid var(--line); border-radius:7px; background:#fff; }
+    .example-crop img { position:absolute; display:block; width:100%; max-width:none; height:auto; left:0; }
+    .example-crop.a { aspect-ratio:1540 / 1051; }
+    .example-crop.a img { top:calc(-64 / 1051 * 100%); }
+    .example-crop.b { aspect-ratio:1540 / 1250; }
+    .example-crop.b img { top:calc(-1235 / 1250 * 100%); }
     .panel-label { display:block; margin-top:5px; color:var(--muted); font-size:.9rem; font-weight:650; text-align:center; }
     @media(max-width:720px) { .result-panel { height:240px; } }
     pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:8px; background:var(--wash); font-size:.9rem; }
@@ -169,7 +176,10 @@
     </div>
       <p>Figure 3 shows two examples from real user questions. The paired panels retain the question-and-answer context so readers can see how the system responds to distinct prompts; the figure complements the aggregate scores above with concrete outputs. As with any generated response, the examples illustrate system behavior and should be read with the cited evidence, not as a substitute for checking the underlying sources.</p>
       <figure class="result-figure">
-        <img class="hero-image" src="examples.png" alt="Two real-world examples showing NeuroRAG query routing, retrieval, answer generation and validation." width="1540" height="2493" loading="lazy">
+        <div class="example-panel-grid">
+          <div><div class="example-crop a"><img src="examples.png" alt="Miniscope technology query: source routing, retrieval, answer generation and validation." width="1540" height="2493" loading="lazy"></div><span class="panel-label">(a) Miniscope technology</span></div>
+          <div><div class="example-crop b"><img src="examples.png" alt="MIN1PIPE preprocessing query: retrieval, web search fallback, answer generation and validation." width="1540" height="2493" loading="lazy"></div><span class="panel-label">(b) MIN1PIPE preprocessing</span></div>
+        </div>
         <figcaption class="caption">Figure 3. Example NeuroRAG responses to real-world questions, illustrating how the system combines a user’s prompt with an evidence-grounded answer.</figcaption>
       </figure>
   </div></section>
