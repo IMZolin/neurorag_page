@@ -64,13 +64,10 @@
     tbody tr:last-child td { border-bottom:0; }
     td:first-child, th:first-child { font-weight:600; }
     .result-figure { width:100%; margin:18px auto 0; }
-    .result-panel-scroll { overflow-x:auto; }
     .result-panel-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; gap:12px; }
-    .result-panel { overflow:hidden; aspect-ratio:2 / 1; border:1px solid var(--line); border-radius:7px; background-repeat:no-repeat; }
-    .result-panel.a { background-position:center top; }
-    .result-panel.b { background-position:center bottom; }
+    .result-panel { display:block; width:100%; height:320px; object-fit:contain; border:1px solid var(--line); border-radius:7px; background:#fff; }
     .panel-label { display:block; margin-top:5px; color:var(--muted); font-size:.9rem; font-weight:650; text-align:center; }
-    .result-source[hidden], .result-panel-grid[hidden] { display:none; }
+    @media(max-width:720px) { .result-panel { height:240px; } }
     pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:8px; background:var(--wash); font-size:.9rem; }
     footer { padding:26px 0; border-top:1px solid var(--line); color:var(--muted); text-align:center; font-size:.9rem; }
     @media(max-width:720px) { header { padding:32px 0 24px; } section { padding:28px 0; } .steps,.results { grid-template-columns:1fr; } table { min-width:720px; } .result-panel-grid { min-width:640px; } }
@@ -101,7 +98,7 @@
 
   <section><div class="wrap">
     <p>The architecture figure traces the full answer path: NeuroRAG routes a question to suitable scientific sources, retrieves and filters passages, combines candidate answers, and checks the final response for grounding and relevance. The diagram provides a map for the stages described below.</p>
-    <img class="hero-image" src="https://raw.githubusercontent.com/Biomed-imaging-lab/NeuroRAG/master/figures/architecture.png" alt="NeuroRAG multi-agent retrieval and answer-validation architecture">
+    <img class="hero-image" src="architecture.png" alt="NeuroRAG multi-agent retrieval and answer-validation architecture" width="1644" height="1128" fetchpriority="high">
     <p class="caption">Figure 1. NeuroRAG’s multi-agent pipeline, from question routing and evidence retrieval through answer synthesis and validation.</p>
   </div></section>
 
@@ -132,13 +129,10 @@
     </div>
     <p>Figure 2 presents a blind preference study with 14 evaluators judging answers to 12 questions. Panel (a) records the choice made for each evaluator–question pair, while panel (b) aggregates those choices by question. Across 163 votes, NeuroRAG received the largest share overall and led on 11 of the 12 questions; GPT-5 led on Q8, and Q9 was more closely divided. The two panels make the aggregate result easier to interpret: preferences were strong on several questions but were not uniform. This study measures evaluator preference, rather than factual correctness.</p>
     <figure class="result-figure">
-      <div class="result-panel-scroll">
-        <div class="result-panel-grid" data-split="0.565" hidden>
-          <div><div class="result-panel a" role="img" aria-label="Panel a: heatmap of evaluator choices for each of the 12 questions."></div><span class="panel-label">(a) Evaluator choices by question</span></div>
-          <div><div class="result-panel b" role="img" aria-label="Panel b: distribution of votes across the 12 questions."></div><span class="panel-label">(b) Vote distribution</span></div>
-        </div>
+      <div class="result-panel-grid">
+        <div><img class="result-panel" src="results-a.png" alt="Heatmap of evaluator choices for each of the 12 questions." width="1511" height="1256" loading="lazy"><span class="panel-label">(a) Evaluator choices by question</span></div>
+        <div><img class="result-panel" src="results-b.png" alt="Distribution of votes across the 12 questions." width="1484" height="890" loading="lazy"><span class="panel-label">(b) Vote distribution</span></div>
       </div>
-      <img class="result-source hero-image" src="https://pub.mdpi-res.com/BDCC/BDCC-10-00372/article_deploy/html/images/BDCC-10-00372-g003.png" alt="Figure 2. Expert blind evaluation results from LLM Arena, including an evaluator-choice heatmap and vote distributions across questions." loading="lazy">
       <figcaption class="caption">Figure 2. Expert blind evaluation results from LLM Arena (163 evaluator–question responses).</figcaption>
     </figure>
     <div class="result-tables">
@@ -175,39 +169,10 @@
     </div>
       <p>Figure 3 shows two examples from real user questions. The paired panels retain the question-and-answer context so readers can see how the system responds to distinct prompts; the figure complements the aggregate scores above with concrete outputs. As with any generated response, the examples illustrate system behavior and should be read with the cited evidence, not as a substitute for checking the underlying sources.</p>
       <figure class="result-figure">
-        <div class="result-panel-scroll">
-          <div class="result-panel-grid" data-split="0.46" hidden>
-            <div><div class="result-panel a" role="img" aria-label="Figure 3 panel a: real-world NeuroRAG query and response example."></div><span class="panel-label">(a) Real-world query and answer</span></div>
-            <div><div class="result-panel b" role="img" aria-label="Figure 3 panel b: second real-world NeuroRAG query and response example."></div><span class="panel-label">(b) Second query and answer</span></div>
-          </div>
-        </div>
-        <img class="result-source hero-image" src="https://pub.mdpi-res.com/BDCC/BDCC-10-00372/article_deploy/html/images/BDCC-10-00372-g002.png" alt="Figure 3. NeuroRAG examples answering real-world questions." loading="lazy">
+        <img class="hero-image" src="examples.png" alt="Two real-world examples showing NeuroRAG query routing, retrieval, answer generation and validation." width="1540" height="2493" loading="lazy">
         <figcaption class="caption">Figure 3. Example NeuroRAG responses to real-world questions, illustrating how the system combines a user’s prompt with an evidence-grounded answer.</figcaption>
       </figure>
   </div></section>
-
-  <script>
-    document.querySelectorAll('.result-figure').forEach(figure => {
-      const source = figure.querySelector('.result-source');
-      const panels = figure.querySelector('.result-panel-grid');
-      function splitFigure() {
-        if (!source.naturalWidth || !source.naturalHeight) return;
-        const splitAt = Number(panels.dataset.split || 0.5);
-        panels.style.gridTemplateColumns = `${1 - splitAt}fr ${splitAt}fr`;
-        panels.querySelectorAll('.result-panel').forEach((panel, index) => {
-          const panelHeightShare = index === 0 ? splitAt : 1 - splitAt;
-          const panelRatio = source.naturalWidth / (source.naturalHeight * panelHeightShare);
-          panel.style.aspectRatio = `${panelRatio} / 1`;
-          panel.style.backgroundImage = `url("${source.currentSrc}")`;
-          panel.style.backgroundSize = `100% ${100 / panelHeightShare}%`;
-        });
-        panels.hidden = false;
-        source.hidden = true;
-      }
-      source.addEventListener('load', splitFigure);
-      if (source.complete) splitFigure();
-    });
-  </script>
 
   <section id="citation"><div class="wrap narrow">
     <h2>Citation</h2>
